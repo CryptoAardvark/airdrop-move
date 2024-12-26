@@ -1,7 +1,8 @@
 module Jrove::jairdrop {
     use std::signer;
     use aptos_framework::timestamp;
-    use aptos_std::table::{Self, Table};
+    use aptos_std::table;
+    use aptos_std::table::Table;
     use Jrove::r_coin;
 
     #[test_only]
@@ -31,9 +32,9 @@ module Jrove::jairdrop {
         });
     }
 
-    public entry fun claim_airdrop(admin: &signer, user_addr: address) acquires AirdropConfig, UserLastClaim {
+    public entry fun claim_airdrop(admin: &signer, user_addr: address) acquires AirdropConfig{
         let admin_addr = signer::address_of(admin);
-        let config = borrow_global<AirdropConfig>(@Jrove);
+        let config = borrow_global_mut<AirdropConfig>(@Jrove);
         let current_time:u64 = timestamp::now_seconds();
 
         if (!table::contains(&config.last_claim_time, user_addr)) {
@@ -41,8 +42,8 @@ module Jrove::jairdrop {
             
         };
         {
-            let user_claim = *table::borrow(&config.last_claim_time, user_addr);
-            assert!(current_time >= user_claim + AIRDROP_INTERVAL, ETOO_EARLY);
+            let user_claim = table::borrow(&config.last_claim_time, user_addr);
+            assert!(current_time >= *user_claim + AIRDROP_INTERVAL, ETOO_EARLY);
             r_coin::transfer(admin, admin_addr, user_addr, config.amount_per_drop);
             table::upsert(&mut config.last_claim_time, user_addr, current_time);
         };
@@ -53,4 +54,6 @@ module Jrove::jairdrop {
         assert!(signer::address_of(admin) == config.admin, ENOT_AUTHORIZED);
         config.amount_per_drop = new_amount;
     }
+
+    
 }
