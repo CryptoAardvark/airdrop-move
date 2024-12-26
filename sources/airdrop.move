@@ -27,6 +27,7 @@ module Jrove::jairdrop {
         move_to(admin, AirdropConfig {
             admin: admin_addr,
             amount_per_drop,
+            last_claim_time: table::new(),
         });
     }
 
