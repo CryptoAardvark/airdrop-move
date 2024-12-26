@@ -1,0 +1,15 @@
+[package]
+name = "Jrove"
+version = "1.0.0"
+authors = []
+
+[addresses]
+Jrove = "0x1bc25628eb75855417f7ff5b1bb81fc1f259118ee6d39706418fc73c25459961"
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
