@@ -55,5 +55,5 @@ module Jrove::jairdrop {
         config.amount_per_drop = new_amount;
     }
 
-    
+    #[test(creator = @Jrove)]
 }
