@@ -36,8 +36,8 @@ module Jrove::jairdrop {
         let config = borrow_global<AirdropConfig>(@Jrove);
         let current_time:u64 = timestamp::now_seconds();
 
-        if (!exists<UserLastClaim>(user_addr)) {
-            move_to(admin, UserLastClaim { last_claim_time: 0 });
+        if (!table::contains(&config.last_claim_time, user_addr)) {
+            table::add(&mut config.last_claim_time, user_addr, 0);
             
         };
         {
