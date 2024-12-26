@@ -41,10 +41,10 @@ module Jrove::jairdrop {
             
         };
         {
-            let user_claim = borrow_global_mut<UserLastClaim>(user_addr);
-            assert!(current_time >= user_claim.last_claim_time + AIRDROP_INTERVAL, ETOO_EARLY);
+            let user_claim = *table::borrow(&config.last_claim_time, user_addr);
+            assert!(current_time >= user_claim + AIRDROP_INTERVAL, ETOO_EARLY);
             r_coin::transfer(admin, admin_addr, user_addr, config.amount_per_drop);
-            user_claim.last_claim_time = current_time;
+            table::upsert(&mut config.last_claim_time, user_addr, current_time);
         };
     }
 
